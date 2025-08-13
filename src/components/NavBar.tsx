@@ -1,0 +1,70 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+
+export default function NavBar() {
+  const [open, setOpen] = useState(false);
+  return (
+    <header className="sticky top-0 z-40 w-full border-b border-black/10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-white/10 dark:bg-black/60">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="font-semibold">
+            Fueling Rockets
+          </Link>
+        </div>
+        <nav className="hidden items-center gap-6 text-sm md:flex">
+          <Link href="/" className="opacity-80 hover:opacity-100">
+            Home
+          </Link>
+          <Link href="/author/preview" className="opacity-80 hover:opacity-100">
+            Preview
+          </Link>
+          <Link href="/app" className="opacity-80 hover:opacity-100">
+            App
+          </Link>
+          <Link
+            href="/login"
+            className="rounded-full bg-black px-4 py-2 text-white hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80"
+          >
+            Start learning
+          </Link>
+        </nav>
+        <button
+          aria-label="Toggle menu"
+          className="md:hidden"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <div className="h-5 w-6">
+            <div className="my-[3px] h-0.5 w-6 bg-current" />
+            <div className="my-[3px] h-0.5 w-6 bg-current" />
+            <div className="my-[3px] h-0.5 w-6 bg-current" />
+          </div>
+        </button>
+      </div>
+      {open && (
+        <div className="border-t border-black/10 bg-white px-4 py-2 text-sm dark:border-white/10 dark:bg-black md:hidden">
+          <div className="flex flex-col gap-2">
+            <Link href="/" onClick={() => setOpen(false)}>
+              Home
+            </Link>
+            <Link href="/author/preview" onClick={() => setOpen(false)}>
+              Preview
+            </Link>
+            <Link href="/app" onClick={() => setOpen(false)}>
+              App
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="rounded-md bg-black px-3 py-2 text-white dark:bg-white dark:text-black"
+            >
+              Start learning
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+
