@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://fuelingrockets.app/schemas/lesson.schema.json",
+  "type": "object",
+  "required": ["id", "title", "version", "status", "estimatedMinutes", "sections"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string", "enum": ["draft", "published"] },
+    "estimatedMinutes": { "type": "integer", "minimum": 1 },
+    "sections": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["type", "prompt", "choices", "correctIndex", "rationales"],
+            "properties": {
+              "type": { "const": "mcq" },
+              "prompt": { "type": "string" },
+              "choices": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+              "correctIndex": { "type": "integer", "minimum": 0 },
+              "rationales": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "prompt", "rubric", "answer"],
+            "properties": {
+              "type": { "const": "short_answer" },
+              "prompt": { "type": "string" },
+              "rubric": { "type": "array", "items": { "type": "string" } },
+              "answer": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "prompt", "reflection"],
+            "properties": {
+              "type": { "const": "notebook_gate" },
+              "prompt": { "type": "string" },
+              "reflection": {
+                "type": "object",
+                "properties": { "placeholder": { "type": "string" } },
+                "required": ["placeholder"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "pattern", "config"],
+            "properties": {
+              "type": { "const": "interactive_explore" },
+              "pattern": { "type": "string", "enum": ["number_line_slider"] },
+              "config": {
+                "type": "object",
+                "properties": {
+                  "min": { "type": "number" },
+                  "max": { "type": "number" },
+                  "target": { "type": "number" }
+                },
+                "required": ["min", "max", "target"]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+
