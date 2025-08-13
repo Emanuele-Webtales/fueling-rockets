@@ -320,27 +320,27 @@ This document defines the MVP scope, architecture, lesson formats, analytics, ro
 Use this as your day-by-day execution list. Keep scope tight; ship thin vertical slices that go end-to-end (auth → lesson → submit → analytics → teacher view).
 
 ### Day 0–1: Accounts, Scaffold, CI/CD
-- [ ] Create GitHub repo and Vercel project; connect for preview deployments
-- [ ] Create Supabase project; note `SUPABASE_URL`, `ANON_KEY` (service role only in server env)
+- [x] Create GitHub repo and Vercel project; connect for preview deployments ([repo](https://github.com/Emanuele-Webtales/fueling-rockets.git))
+- [x] Create Supabase project; note `SUPABASE_URL`, `ANON_KEY` (service role only in server env)
 - [ ] Create Storage bucket `lesson-assets`
 - [ ] Create Sentry and PostHog projects; copy DSN and API keys
-- [ ] Initialize Next.js 15 App Router + TypeScript + Tailwind using pnpm
-- [ ] Add Framer Motion and GSAP (ES modules only; avoid `require()`)
-- [ ] Add ESLint (strict TS), Prettier, Husky pre-commit (lint-staged)
-- [ ] Add GitHub Actions: `pnpm i`, `pnpm typecheck`, `pnpm lint`, `pnpm test --if-present`
-- [ ] Configure Vercel env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY`
-- [ ] Create routes: `/login`, `/app`, `/lesson/[slug]`, placeholder pages render
+- [x] Initialize Next.js 15 App Router + TypeScript + Tailwind using pnpm
+- [x] Add Framer Motion and GSAP (ES modules only; avoid `require()`)
+- [x] Add ESLint (strict TS), Prettier, Husky pre-commit (lint-staged)
+- [x] Add GitHub Actions: `pnpm i`, `pnpm typecheck`, `pnpm lint`, `pnpm test --if-present`
+- [x] Configure Vercel env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SENTRY_DSN`, `NEXT_PUBLIC_POSTHOG_KEY` (local `.env` done)
+- [x] Create routes: `/login`, `/app`, `/lesson/[slug]`, placeholder pages render
 
 ### Day 2: Auth, Roles, Basic Shell
-- [ ] Implement Supabase email/password and magic link auth
+- [x] Implement Supabase email/password and magic link auth (with signup)
 - [ ] Add roles: Student, Teacher, Admin (user metadata table if needed)
-- [ ] Add layout shell with mobile-first nav, progress bar placeholder
+- [x] Add layout shell with mobile-first nav, progress bar placeholder
 - [ ] Implement Focus Mode toggle (hide chrome, full-screen, reduced motion)
 
 ### Day 3: DB Schema (Minimum Set) + RLS
-- [ ] Create tables: `users`, `classes`, `enrollments`, `lessons`, `activities`, `submissions`, `progress`, `class_assignments`, `points_ledger`, `achievements`, `user_achievements`
-- [ ] Write initial RLS: students read published lessons, write own submissions/progress; teachers read class data
-- [ ] Seed script: demo teacher, class with join code, 5 students
+- [x] Create tables: `users`, `classes`, `enrollments`, `lessons`, `activities`, `submissions`, `progress`, `class_assignments` (see `db/schema.sql`)
+- [x] Write initial RLS: students read published lessons, write own submissions/progress; teachers read class data (see `db/schema.sql`)
+- [x] Seed script: demo class + published lesson and activities (see `db/seed.sql`)
 - [ ] Storage: confirm signed URL policy for `lesson-assets`
 
 ### Day 4: Content Pipeline v1
