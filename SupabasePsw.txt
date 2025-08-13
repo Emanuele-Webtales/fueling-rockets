@@ -1,1 +1,4 @@
 SupabaseFuelingRockets
+
+project URL: 'https://qlasjqzzjtxcssspvbog.supabase.co'
+Anon public: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsYXNqcXp6anR4Y3Nzc3B2Ym9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwOTcwMzEsImV4cCI6MjA3MDY3MzAzMX0.RaAvbUFg6U5gSN6yzjuFKwNDxlRTVQGqGyfaHHvEL7o

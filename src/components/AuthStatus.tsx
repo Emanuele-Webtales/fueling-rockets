@@ -7,8 +7,12 @@ import { useRouter } from "next/navigation";
 export default function AuthStatus() {
   const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
+  const hasSupabaseEnv = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 
   useEffect(() => {
+    if (!hasSupabaseEnv) return;
     let mounted = true;
     const supabase = getSupabaseClient();
     supabase.auth.getSession().then(({ data }) => {
@@ -22,9 +26,9 @@ export default function AuthStatus() {
       mounted = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [hasSupabaseEnv]);
 
-  if (!email) {
+  if (!hasSupabaseEnv || !email) {
     return (
       <Link
         href="/login"
