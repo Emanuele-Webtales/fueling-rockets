@@ -322,7 +322,7 @@ Use this as your day-by-day execution list. Keep scope tight; ship thin vertical
 ### Day 0–1: Accounts, Scaffold, CI/CD
 - [x] Create GitHub repo and Vercel project; connect for preview deployments ([repo](https://github.com/Emanuele-Webtales/fueling-rockets.git))
 - [x] Create Supabase project; note `SUPABASE_URL`, `ANON_KEY` (service role only in server env)
-- [ ] Create Storage bucket `lesson-assets`
+- [x] Create Storage bucket `lesson-assets`
 - [ ] Create Sentry and PostHog projects; copy DSN and API keys
 - [x] Initialize Next.js 15 App Router + TypeScript + Tailwind using pnpm
 - [x] Add Framer Motion and GSAP (ES modules only; avoid `require()`)
@@ -333,7 +333,8 @@ Use this as your day-by-day execution list. Keep scope tight; ship thin vertical
 
 ### Day 2: Auth, Roles, Basic Shell
 - [x] Implement Supabase email/password and magic link auth (with signup)
-- [ ] Add roles: Student, Teacher, Admin (user metadata table if needed)
+- [x] Add onboarding: display name and role (student/teacher with access code)
+- [ ] Admin role (later)
 - [x] Add layout shell with mobile-first nav, progress bar placeholder
 - [ ] Implement Focus Mode toggle (hide chrome, full-screen, reduced motion)
 

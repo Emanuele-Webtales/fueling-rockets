@@ -18,7 +18,7 @@ export default function LoginPage() {
     const supabase = getSupabaseClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) setMessage(error.message);
-    else setMessage("Logged in.");
+    else window.location.href = "/onboarding";
     setLoading(false);
   }
 

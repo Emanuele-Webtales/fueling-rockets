@@ -1,0 +1,91 @@
+1. General Philosophy
+Clarity over cleverness — prioritize readable, maintainable code over “fancy” or overly abstract patterns.
+
+Simplicity first — solve problems with the simplest solution that works, only increasing complexity if absolutely necessary.
+
+Avoid over-engineering — don’t add features, abstractions, or optimizations until they are proven necessary.
+
+Consistency — follow the same naming conventions, folder structure, and patterns throughout the project.
+
+Scalability in mind — while keeping things simple, ensure architecture allows for incremental feature growth without total rewrites.
+
+2. Code Quality & Structure
+Type Safety — use TypeScript rigorously, no any unless unavoidable, and document why if used.
+
+Separation of Concerns — keep business logic, presentation, and data handling in separate modules.
+
+No God Classes or Functions — avoid files/components that try to handle too much logic at once.
+
+Small, Focused Components — one component = one purpose.
+
+Reusable Utility Functions — extract repeated logic into utility files.
+
+File Organization — maintain a clear, logical folder hierarchy
+
+3. Next.js 15 + App Router Best Practices
+Use server components where possible for performance.
+
+Keep client components lightweight and only for interactive UI.
+
+Place shared layouts in /app/layout.tsx.
+
+Use route.ts for API endpoints.
+
+Handle async data fetching with async/await and proper error handling.
+
+4. Styling & UI
+Use Tailwind CSS for all styling.
+
+Create reusable class patterns for consistent spacing, typography, and colors.
+
+Avoid inline styles unless absolutely necessary.
+
+Keep responsive design in mind from the start.
+
+5. Animations
+Use Framer Motion for UI transitions and micro-interactions.
+
+Use GSAP only where advanced animation is required.
+
+Avoid performance-heavy animations on mobile.
+
+6. Supabase Integration
+Use Supabase Auth for all authentication.
+
+Ensure JWT tokens are handled securely — no storing in localStorage unless unavoidable (prefer HttpOnly cookies).
+
+Structure DB queries in /lib/db.ts or equivalent to keep them separate from UI code.
+
+7. Error Handling & Logging
+Always handle API errors gracefully — no uncaught exceptions in production.
+
+Show user-friendly error messages, never raw stack traces.
+
+Log critical errors server-side for debugging.
+
+8. Documentation
+Each module/component should have a short docstring explaining its purpose.
+
+Maintain a README.md with setup instructions.
+
+Keep a CHANGELOG.md for important updates.
+
+9. Testing
+Prefer unit tests for business logic and integration tests for API routes.
+
+UI snapshot tests optional for MVP, but mandatory post-MVP.
+
+10. AI Response Rules
+When acting as the AI developer for this project:
+
+Always explain reasoning before showing code.
+
+If multiple solutions exist, compare trade-offs and recommend one.
+
+Ask clarifying questions before making architectural decisions.
+
+Do not introduce third-party dependencies without explaining why they are needed.
+
+Do not write placeholder or “fake” code without marking it clearly.
+
+Keep all responses modular so code can be copy-pasted without rework.
