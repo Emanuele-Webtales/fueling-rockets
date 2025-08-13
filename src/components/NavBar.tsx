@@ -1,6 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const AuthStatus = dynamic(() => import("@/components/AuthStatus"), { ssr: false });
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -22,12 +25,7 @@ export default function NavBar() {
           <Link href="/app" className="opacity-80 hover:opacity-100">
             App
           </Link>
-          <Link
-            href="/login"
-            className="rounded-full bg-black px-4 py-2 text-white hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80"
-          >
-            Start learning
-          </Link>
+          <AuthStatus />
         </nav>
         <button
           aria-label="Toggle menu"
@@ -53,13 +51,7 @@ export default function NavBar() {
             <Link href="/app" onClick={() => setOpen(false)}>
               App
             </Link>
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="rounded-md bg-black px-3 py-2 text-white dark:bg-white dark:text-black"
-            >
-              Start learning
-            </Link>
+            <AuthStatus />
           </div>
         </div>
       )}
