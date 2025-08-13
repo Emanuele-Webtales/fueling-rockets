@@ -4,8 +4,8 @@ export const metadata: Metadata = {
   title: 'Lesson',
 };
 
-export default function LessonPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   return (
     <main className="mx-auto max-w-2xl p-6">
       <h1 className="text-2xl font-semibold">Lesson: {slug}</h1>

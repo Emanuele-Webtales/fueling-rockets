@@ -17,9 +17,6 @@ jobs:
           cache: 'pnpm'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-        working-directory: web
       - run: pnpm lint
-        working-directory: web
       - run: pnpm build
-        working-directory: web
 
