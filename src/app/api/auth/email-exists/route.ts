@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 export async function POST(request: Request) {
   try {
@@ -17,17 +16,22 @@ export async function POST(request: Request) {
       );
     }
 
-    const admin = createClient(url, serviceRoleKey);
-    const { data, error } = await admin.auth.admin.getUserByEmail(email);
-    if (error) {
-      // If Supabase returns 'User not found', treat as not existing
-      if (String(error.message).toLowerCase().includes("not found")) {
-        return NextResponse.json({ exists: false });
-      }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    // Call GoTrue Admin API directly to filter by email reliably
+    const resp = await fetch(`${url}/auth/v1/admin/users?email=${encodeURIComponent(email)}`, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      return NextResponse.json({ error: text || `Auth admin error (${resp.status})` }, { status: 500 });
     }
 
-    return NextResponse.json({ exists: Boolean(data?.user) });
+    const json = (await resp.json()) as any[];
+    return NextResponse.json({ exists: Array.isArray(json) && json.length > 0 });
   } catch (err: any) {
     return NextResponse.json({ error: String(err?.message ?? err) }, { status: 500 });
   }
