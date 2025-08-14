@@ -24,8 +24,13 @@ export default function RequireAuth({ children }: Props) {
         .from("profiles")
         .select("display_name, role")
         .eq("id", user.id)
-        .single();
-      if (!profile?.display_name) {
+        .maybeSingle();
+      if (!profile) {
+        await supabase.auth.signOut();
+        router.replace(`/signup?email=${encodeURIComponent(user.email ?? "")}`);
+        return;
+      }
+      if (!profile.display_name) {
         router.replace("/onboarding");
         return;
       }

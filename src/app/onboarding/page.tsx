@@ -15,15 +15,14 @@ export default function OnboardingPage() {
     // Redirect if already onboarded
     supabase.auth.getUser().then(async ({ data }) => {
       const id = data.user?.id;
-      if (!id) {
-        router.replace("/login");
-        return;
-      }
-      const { data: profile } = await supabase.from("profiles").select("display_name").eq("id", id).single();
-      if (profile?.display_name) {
-        router.replace("/app");
-        return;
-      }
+      if (!id) return router.replace("/login");
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", id)
+        .maybeSingle();
+      if (!profile) return router.replace("/signup");
+      if (profile.display_name) return router.replace("/app");
     });
   }, [router, supabase]);
 

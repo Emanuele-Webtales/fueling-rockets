@@ -22,7 +22,30 @@ export default function LoginPage() {
       setMessage(error.message);
       setIsError(true);
     } else {
-      window.location.href = "/onboarding";
+      // After successful auth, ensure a profile row exists
+      const { data: u } = await supabase.auth.getUser();
+      const userId = u.user?.id;
+      if (userId) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", userId)
+          .maybeSingle();
+
+        if (!profile) {
+          await supabase.auth.signOut();
+          window.location.href = `/signup?email=${encodeURIComponent(email)}`;
+          return;
+        }
+
+        if (profile.display_name) {
+          window.location.href = "/app";
+        } else {
+          window.location.href = "/onboarding";
+        }
+      } else {
+        window.location.href = "/login";
+      }
       setIsError(false);
     }
     setLoading(false);
