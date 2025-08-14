@@ -107,7 +107,17 @@ export default function SignupPage() {
         />
         {message && (
           <div className="text-sm">
-            <p className={message.includes("already exists") ? "text-red-600" : message.includes("error") ? "text-red-600" : "text-green-600"}>
+            <p className={
+              message.includes("already exists") || 
+              message.includes("Invalid") ||
+              message.includes("Invalid login credentials") ||
+              message.includes("password") ||
+              message.includes("email") ||
+              message.includes("failed") ||
+              message.includes("error")
+                ? "text-red-600" 
+                : "text-green-600"
+            }>
               {message}
             </p>
             {message.includes("already exists") && (
