@@ -43,6 +43,20 @@ export default function SignupPage() {
       return;
     }
 
+    // Check if email already exists by attempting to sign in
+    // This is a reliable way to check if an email is registered
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password: "dummy-password-to-check-existence"
+    });
+    
+    // If we get an "Invalid login credentials" error, the email exists
+    if (signInError && signInError.message.includes("Invalid login credentials")) {
+      setMessage("An account with this email already exists. Please sign in instead.");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -52,12 +66,7 @@ export default function SignupPage() {
     });
     
     if (error) {
-      // Handle specific error for existing email
-      if (error.message.includes("already registered") || error.message.includes("already exists")) {
-        setMessage("An account with this email already exists. Please sign in instead.");
-      } else {
-        setMessage(error.message);
-      }
+      setMessage(error.message);
     } else {
       setMessage("Check your email to confirm your account, then you can sign in.");
     }
