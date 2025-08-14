@@ -18,11 +18,11 @@ export default function OnboardingPage() {
       if (!id) return router.replace("/login");
       const { data: profile } = await supabase
         .from("profiles")
-        .select("display_name")
+        .select("display_name, onboarded")
         .eq("id", id)
         .maybeSingle();
       if (!profile) return router.replace("/signup");
-      if (profile.display_name) return router.replace("/app");
+      if (profile.onboarded) return router.replace("/app");
     });
   }, [router, supabase]);
 
@@ -43,7 +43,7 @@ export default function OnboardingPage() {
     }
     const { error: upsertErr } = await supabase
       .from("profiles")
-      .upsert({ id, display_name: name, role }, { onConflict: "id" });
+      .upsert({ id, display_name: name, role, onboarded: true }, { onConflict: "id" });
     if (upsertErr) {
       setError(upsertErr.message);
       return;
