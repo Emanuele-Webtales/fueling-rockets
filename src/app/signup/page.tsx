@@ -52,7 +52,12 @@ export default function SignupPage() {
     });
     
     if (error) {
-      setMessage(error.message);
+      // Handle specific error for existing email
+      if (error.message.includes("already registered") || error.message.includes("already exists")) {
+        setMessage("An account with this email already exists. Please sign in instead.");
+      } else {
+        setMessage(error.message);
+      }
     } else {
       setMessage("Check your email to confirm your account, then you can sign in.");
     }
@@ -92,9 +97,18 @@ export default function SignupPage() {
           placeholder="••••••••"
         />
         {message && (
-          <p className={`text-sm ${message.includes("error") ? "text-red-600" : "text-green-600"}`}>
-            {message}
-          </p>
+          <div className="text-sm">
+            <p className={message.includes("already exists") ? "text-red-600" : message.includes("error") ? "text-red-600" : "text-green-600"}>
+              {message}
+            </p>
+            {message.includes("already exists") && (
+              <p className="mt-2 text-sm">
+                <Link href="/login" className="text-blue-600 hover:underline">
+                  Go to sign in page →
+                </Link>
+              </p>
+            )}
+          </div>
         )}
         <button
           onClick={signUp}
