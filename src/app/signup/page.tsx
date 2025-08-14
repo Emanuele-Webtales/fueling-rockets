@@ -46,6 +46,26 @@ export default function SignupPage() {
       return;
     }
 
+    // Server-side check: does email already exist?
+    try {
+      const res = await fetch("/api/auth/email-exists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        const json = (await res.json()) as { exists?: boolean };
+        if (json.exists) {
+          setIsError(true);
+          setMessage("An account with this email already exists. Please sign in instead.");
+          setLoading(false);
+          return;
+        }
+      }
+    } catch {
+      // If the check fails, continue to signup; signup will still report duplicates
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
