@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,12 +34,14 @@ export default function SignupPage() {
     
     if (password !== confirmPassword) {
       setMessage("Passwords don't match");
+      setIsError(true);
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setMessage("Password must be at least 6 characters");
+      setIsError(true);
       setLoading(false);
       return;
     }
@@ -53,6 +56,7 @@ export default function SignupPage() {
     // If we get an "Invalid login credentials" error, the email exists
     if (signInError && signInError.message.includes("Invalid login credentials")) {
       setMessage("An account with this email already exists. Please sign in instead.");
+      setIsError(true);
       setLoading(false);
       return;
     }
@@ -67,8 +71,10 @@ export default function SignupPage() {
     
     if (error) {
       setMessage(error.message);
+      setIsError(true);
     } else {
       setMessage("Check your email to confirm your account, then you can sign in.");
+      setIsError(false);
     }
     setLoading(false);
   }
@@ -107,17 +113,7 @@ export default function SignupPage() {
         />
         {message && (
           <div className="text-sm">
-            <p className={
-              message.includes("already exists") || 
-              message.includes("Invalid") ||
-              message.includes("Invalid login credentials") ||
-              message.includes("password") ||
-              message.includes("email") ||
-              message.includes("failed") ||
-              message.includes("error")
-                ? "text-red-600" 
-                : "text-green-600"
-            }>
+            <p className={isError ? "text-red-600" : "text-green-600"}>
               {message}
             </p>
             {message.includes("already exists") && (
