@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const supabase = getSupabaseClient();
@@ -10,6 +11,20 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Redirect if already authenticated
+    supabase.auth.getUser().then(async ({ data }) => {
+      const id = data.user?.id;
+      if (!id) return;
+      const { data: profile } = await supabase.from("profiles").select("display_name").eq("id", id).single();
+      if (profile?.display_name) {
+        router.replace("/app");
+      } else {
+        router.replace("/onboarding");
+      }
+    });
+  }, [router, supabase]);
 
   async function signUp() {
     setLoading(true);

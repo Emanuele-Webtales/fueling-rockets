@@ -1,12 +1,53 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { getSupabaseClient } from "@/lib/supabaseClient";
 
 const AuthStatus = dynamic(() => import("@/components/AuthStatus"), { ssr: false });
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState(false);
+
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+    let mounted = true;
+
+    async function checkAuth() {
+      const { data } = await supabase.auth.getSession();
+      const user = data.session?.user;
+      if (!mounted) return;
+      
+      if (user) {
+        setIsAuthenticated(true);
+        // Check if user is onboarded
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single();
+        if (mounted) {
+          setIsOnboarded(Boolean(profile?.display_name));
+        }
+      } else {
+        setIsAuthenticated(false);
+        setIsOnboarded(false);
+      }
+    }
+
+    checkAuth();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAuth();
+    });
+
+    return () => {
+      mounted = false;
+      subscription?.unsubscribe();
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-white/10 dark:bg-black/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
@@ -25,9 +66,11 @@ export default function NavBar() {
           <Link href="/app" className="opacity-80 hover:opacity-100">
             App
           </Link>
-          <Link href="/signup" className="opacity-80 hover:opacity-100">
-            Sign Up
-          </Link>
+          {!isAuthenticated && (
+            <Link href="/signup" className="opacity-80 hover:opacity-100">
+              Sign Up
+            </Link>
+          )}
           <AuthStatus />
         </nav>
         <button
@@ -54,9 +97,11 @@ export default function NavBar() {
             <Link href="/app" onClick={() => setOpen(false)}>
               App
             </Link>
-            <Link href="/signup" onClick={() => setOpen(false)}>
-              Sign Up
-            </Link>
+            {!isAuthenticated && (
+              <Link href="/signup" onClick={() => setOpen(false)}>
+                Sign Up
+              </Link>
+            )}
             <AuthStatus />
           </div>
         </div>

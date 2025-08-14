@@ -15,9 +15,15 @@ export default function OnboardingPage() {
     // Redirect if already onboarded
     supabase.auth.getUser().then(async ({ data }) => {
       const id = data.user?.id;
-      if (!id) return;
+      if (!id) {
+        router.replace("/login");
+        return;
+      }
       const { data: profile } = await supabase.from("profiles").select("display_name").eq("id", id).single();
-      if (profile?.display_name) router.replace("/app");
+      if (profile?.display_name) {
+        router.replace("/app");
+        return;
+      }
     });
   }, [router, supabase]);
 
