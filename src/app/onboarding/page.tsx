@@ -12,15 +12,16 @@ export default function OnboardingPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Redirect if already onboarded
     supabase.auth.getUser().then(async ({ data }) => {
       const id = data.user?.id;
       if (!id) return router.replace("/login");
+
       const { data: profile } = await supabase
         .from("profiles")
         .select("display_name, onboarded")
         .eq("id", id)
         .maybeSingle();
+
       if (!profile) return router.replace("/signup");
       if (profile.onboarded) return router.replace("/app");
     });
@@ -28,12 +29,12 @@ export default function OnboardingPage() {
 
   async function submit() {
     setError(null);
+
     const { data: auth } = await supabase.auth.getUser();
     const id = auth.user?.id;
-    if (!id) {
-      router.replace("/login");
-      return;
-    }
+    if (!id) return router.replace("/login");
+
+    // Optional teacher code check
     if (role === "teacher") {
       const expected = process.env.NEXT_PUBLIC_TEACHER_ACCESS_CODE;
       if (!expected || code.trim() !== expected) {
@@ -41,9 +42,12 @@ export default function OnboardingPage() {
         return;
       }
     }
+
+    // Mark as onboarded
     const { error: upsertErr } = await supabase
       .from("profiles")
       .upsert({ id, display_name: name, role, onboarded: true }, { onConflict: "id" });
+
     if (upsertErr) {
       setError(upsertErr.message);
       return;

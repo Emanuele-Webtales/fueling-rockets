@@ -22,18 +22,22 @@ export default function RequireAuth({ children }: Props) {
       }
       const { data: profile } = await supabase
         .from("profiles")
-        .select("display_name, role")
+        .select("display_name, role, onboarded")
         .eq("id", user.id)
         .maybeSingle();
+
       if (!profile) {
         await supabase.auth.signOut();
         router.replace(`/signup?email=${encodeURIComponent(user.email ?? "")}`);
         return;
       }
-      if (!profile.display_name) {
+
+      // Gate on explicit onboarded flag
+      if (!profile.onboarded) {
         router.replace("/onboarding");
         return;
       }
+
       setReady(true);
     }
     check();
