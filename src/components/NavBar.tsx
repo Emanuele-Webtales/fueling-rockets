@@ -25,6 +25,9 @@ export default function NavBar() {
           <Link href="/app" className="opacity-80 hover:opacity-100">
             App
           </Link>
+          <Link href="/signup" className="opacity-80 hover:opacity-100">
+            Sign Up
+          </Link>
           <AuthStatus />
         </nav>
         <button
@@ -50,6 +53,9 @@ export default function NavBar() {
             </Link>
             <Link href="/app" onClick={() => setOpen(false)}>
               App
+            </Link>
+            <Link href="/signup" onClick={() => setOpen(false)}>
+              Sign Up
             </Link>
             <AuthStatus />
           </div>

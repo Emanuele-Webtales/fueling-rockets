@@ -3,50 +3,51 @@ import { useState } from "react";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const supabase = getSupabaseClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function signIn() {
+  async function signUp() {
     setLoading(true);
     setMessage(null);
-    const { error } = await supabase.auth.signInWithPassword({
+    
+    if (password !== confirmPassword) {
+      setMessage("Passwords don't match");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
       email,
       password,
-    });
-    if (error) {
-      setMessage(error.message);
-    } else {
-      window.location.href = "/onboarding";
-    }
-    setLoading(false);
-  }
-
-  async function signInWithMagicLink() {
-    setLoading(true);
-    setMessage(null);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
       options: {
         emailRedirectTo: `${window.location.origin}/onboarding`,
       },
     });
+    
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage("Magic link sent to your email.");
+      setMessage("Check your email to confirm your account, then you can sign in.");
     }
     setLoading(false);
   }
 
   return (
     <main className="mx-auto max-w-md p-6">
-      <h1 className="text-2xl font-semibold">Sign In</h1>
+      <h1 className="text-2xl font-semibold">Create Account</h1>
       <p className="mt-2 text-sm opacity-80">
-        Sign in to your existing account.
+        Sign up for a new Fueling Rockets account.
       </p>
 
       <div className="mt-6 grid gap-3">
@@ -66,37 +67,36 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
         />
+        <label className="text-sm">Confirm Password</label>
+        <input
+          className="rounded-md border border-black/10 bg-white px-3 py-2 text-sm outline-none ring-1 ring-transparent focus:ring-black/10 dark:border-white/15 dark:bg-black dark:focus:ring-white/20"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="••••••••"
+        />
         {message && (
           <p className={`text-sm ${message.includes("error") ? "text-red-600" : "text-green-600"}`}>
             {message}
           </p>
         )}
         <button
-          onClick={signIn}
-          disabled={loading || !email || !password}
+          onClick={signUp}
+          disabled={loading || !email || !password || !confirmPassword}
           className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/85 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-white/85"
         >
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-        <button
-          onClick={signInWithMagicLink}
-          disabled={loading || !email}
-          className="rounded-md border border-black/10 bg-white px-4 py-2 text-sm font-medium hover:bg-black/5 disabled:opacity-60 dark:border-white/15 dark:bg-black dark:hover:bg-white/5"
-        >
-          {loading ? "Sending..." : "Send Magic Link"}
+          {loading ? "Creating account..." : "Create Account"}
         </button>
       </div>
 
       <div className="mt-6 text-center text-sm">
         <p className="opacity-80">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
-            Sign up here
+          Already have an account?{" "}
+          <Link href="/login" className="text-blue-600 hover:underline">
+            Sign in here
           </Link>
         </p>
       </div>
     </main>
   );
 }
-
-
