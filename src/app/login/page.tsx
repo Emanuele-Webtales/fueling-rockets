@@ -9,6 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   async function signIn() {
     setLoading(true);
@@ -19,8 +20,10 @@ export default function LoginPage() {
     });
     if (error) {
       setMessage(error.message);
+      setIsError(true);
     } else {
       window.location.href = "/onboarding";
+      setIsError(false);
     }
     setLoading(false);
   }
@@ -36,8 +39,10 @@ export default function LoginPage() {
     });
     if (error) {
       setMessage(error.message);
+      setIsError(true);
     } else {
       setMessage("Magic link sent to your email.");
+      setIsError(false);
     }
     setLoading(false);
   }
@@ -67,7 +72,7 @@ export default function LoginPage() {
           placeholder="••••••••"
         />
         {message && (
-          <p className={`text-sm ${message.includes("error") ? "text-red-600" : "text-green-600"}`}>
+          <p className={`text-sm ${isError ? "text-red-600" : "text-green-600"}`}>
             {message}
           </p>
         )}

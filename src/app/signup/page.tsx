@@ -40,23 +40,8 @@ export default function SignupPage() {
     }
 
     if (password.length < 6) {
+      setIsError(true);
       setMessage("Password must be at least 6 characters");
-      setIsError(true);
-      setLoading(false);
-      return;
-    }
-
-    // Check if email already exists by attempting to sign in
-    // This is a reliable way to check if an email is registered
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password: "dummy-password-to-check-existence"
-    });
-    
-    // If we get an "Invalid login credentials" error, the email exists
-    if (signInError && signInError.message.includes("Invalid login credentials")) {
-      setMessage("An account with this email already exists. Please sign in instead.");
-      setIsError(true);
       setLoading(false);
       return;
     }
@@ -70,7 +55,13 @@ export default function SignupPage() {
     });
     
     if (error) {
-      setMessage(error.message);
+      // Supabase returns a specific message when email is already registered
+      const msg = error.message?.toLowerCase() ?? "";
+      if (msg.includes("already") && (msg.includes("registered") || msg.includes("exists"))) {
+        setMessage("An account with this email already exists. Please sign in instead.");
+      } else {
+        setMessage(error.message);
+      }
       setIsError(true);
     } else {
       setMessage("Check your email to confirm your account, then you can sign in.");
